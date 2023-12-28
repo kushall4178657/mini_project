@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "410537867927",
+    "project_id": "mini-pro-1cead",
+    "storage_bucket": "mini-pro-1cead.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410537867927:android:7ee19ad112ea1bf52587d2",
+        "android_client_info": {
+          "package_name": "com.example.mini_pro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeWx3oPxW6LonU7kzOyZ4vU1CmtT9mxhk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
