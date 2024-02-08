@@ -1,61 +1,34 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({super.key});
-
   @override
   State<MyHome> createState() => _MyHomeState();
 }
 
 class _MyHomeState extends State<MyHome> {
+  var auth = FirebaseAuth.instance;
+  Future<void> signOut() async {
+    await auth.signOut();
+    Navigator.pushNamedAndRemoveUntil(context, 'phone', (route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.green.shade600,
-          title: Text(
-            "Welcome",
-            style: TextStyle(color: Colors.white),
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              signOut();
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.pink),
+            child: const Text(
+              'Log Out',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: (value) {},
-          currentIndex: 0,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              backgroundColor: Colors.green.shade600,
-              icon: Icon(
-                Icons.home,
-                color: Colors.white,
-              ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              backgroundColor: Colors.green,
-              icon: Icon(
-                Icons.checklist_rtl_rounded,
-                color: Colors.white,
-              ),
-              label: 'Bookings',
-            ),
-            BottomNavigationBarItem(
-              backgroundColor: Colors.green,
-              icon: Icon(
-                Icons.wallet_rounded,
-                color: Colors.white,
-              ),
-              label: 'Bill',
-            ),
-            BottomNavigationBarItem(
-              backgroundColor: Colors.green,
-              icon: Icon(
-                Icons.account_circle,
-                color: Colors.white,
-              ),
-              label: 'Account',
-            ),
-          ],
         ),
       ),
     );

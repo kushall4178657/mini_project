@@ -1,39 +1,41 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mini_pro/phone.dart';
 import 'package:pinput/pinput.dart';
 
 class MyOtp extends StatefulWidget {
   const MyOtp({super.key});
-
   @override
   State<MyOtp> createState() => _MyOtpState();
 }
 
 class _MyOtpState extends State<MyOtp> {
   final FirebaseAuth auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 56,
-      textStyle: TextStyle(
+      textStyle: const TextStyle(
           fontSize: 20,
           color: Color.fromRGBO(30, 60, 87, 1),
           fontWeight: FontWeight.w600),
       decoration: BoxDecoration(
-        border: Border.all(color: Color.fromRGBO(234, 239, 243, 1)),
+        border: Border.all(color: const Color.fromRGBO(234, 239, 243, 1)),
         borderRadius: BorderRadius.circular(20),
       ),
     );
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: Color.fromRGBO(114, 178, 238, 1)),
+      border: Border.all(color: Colors.pink),
       borderRadius: BorderRadius.circular(8),
     );
 
     final submittedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration?.copyWith(
-        color: Color.fromRGBO(234, 239, 243, 1),
+        color: const Color.fromRGBO(234, 239, 243, 1),
       ),
     );
     var code = "";
@@ -47,7 +49,7 @@ class _MyOtpState extends State<MyOtp> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back_ios_rounded,
               color: Colors.black,
               size: 25,
@@ -60,24 +62,26 @@ class _MyOtpState extends State<MyOtp> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Verification Code',
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Text(
                     'Please enter the 6-digit code sent on ${MyPhone.phone_num}',
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Pinput(
+                      androidSmsAutofillMethod:
+                          AndroidSmsAutofillMethod.smsUserConsentApi,
                       length: 6,
                       defaultPinTheme: defaultPinTheme,
                       focusedPinTheme: focusedPinTheme,
@@ -102,21 +106,37 @@ class _MyOtpState extends State<MyOtp> {
                                     verificationId: MyPhone.verify,
                                     smsCode: code);
                             await auth.signInWithCredential(credential);
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, 'home', (route) => false);
+                            if (await checkUserProfile()) {
+                              print('user is registered');
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, 'home', (route) => false);
+                            } else {
+                              print('user is not registered');
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, 'profile', (route) => false);
+                            }
                           } catch (e) {
-                            print("Wrong OTP");
+                            Get.snackbar(
+                              'Error',
+                              'Incorrect OTP!',
+                              snackPosition: SnackPosition.BOTTOM,
+                              icon: const Icon(
+                                Icons.error_outline_sharp,
+                                color: Colors.red,
+                              ),
+                              padding: const EdgeInsets.all(8.0),
+                            );
                           }
                         },
-                        child: Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white),
-                        ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green.shade600,
+                          backgroundColor: Colors.pink,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
+                        ),
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
                     ),
@@ -130,7 +150,7 @@ class _MyOtpState extends State<MyOtp> {
                             Navigator.pushNamedAndRemoveUntil(
                                 context, 'phone', (route) => false);
                           },
-                          child: Text(
+                          child: const Text(
                             'Edit Phone Number ?',
                             style: TextStyle(
                               color: Colors.black,
@@ -147,4 +167,20 @@ class _MyOtpState extends State<MyOtp> {
       ),
     );
   }
+}
+
+Future<bool> checkUserProfile() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  print(user);
+  if (user != null) {
+    DocumentSnapshot<Map<String, dynamic>> profileSnapshot =
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(user.uid)
+            .get();
+
+    return profileSnapshot.exists;
+  }
+
+  return false;
 }
