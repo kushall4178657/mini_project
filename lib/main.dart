@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mini_pro/home.dart';
+import 'package:mini_pro/logout.dart';
 import 'package:mini_pro/otp.dart';
+import 'package:mini_pro/pages/home.dart';
 import 'package:mini_pro/phone.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mini_pro/profile_screen.dart';
@@ -58,13 +59,14 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: isLogin ? const MyHome() : const MyPhone(),
+      home: isLogin ? const HomePage() : const MyPhone(),
       // initialRoute: 'phone',
       routes: {
         'phone': (context) => const MyPhone(),
         'otp': (context) => const MyOtp(),
-        'home': (context) => const MyHome(),
+        'home': (context) => const HomePage(),
         'profile': (context) => ProfileScreen(),
+        'logout': (context) => MyHome(),
       },
     );
   }
