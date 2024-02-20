@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mini_pro/aboutus.dart';
+import 'package:mini_pro/bookings.dart';
+import 'package:mini_pro/bottomAppbar.dart';
 import 'package:mini_pro/logout.dart';
 import 'package:mini_pro/otp.dart';
 import 'package:mini_pro/pages/home.dart';
@@ -9,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:mini_pro/profile_screen.dart';
 import 'package:get/get.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:mini_pro/user_worker.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -22,10 +26,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(
-    const GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MyApp(),
-    ),
+    // const GetMaterialApp(
+    //   debugShowCheckedModeBanner: false,
+    // home:
+    MyApp(),
+    // ),
   );
 }
 // FlutterNativeSplash.remove();
@@ -57,16 +62,20 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: isLogin ? const HomePage() : const MyPhone(),
-      // initialRoute: 'phone',
+      // home: HomePageState(),
+      home: isLogin ? const NavigationExample() : const MyPhone(),
+      initialRoute: '/',
       routes: {
         'phone': (context) => const MyPhone(),
         'otp': (context) => const MyOtp(),
-        'home': (context) => const HomePage(),
         'profile': (context) => ProfileScreen(),
-        'logout': (context) => MyHome(),
+        'home': (context) => HomePageState(),
+        'logout': (context) => Mylogout(),
+        'bookings': (context) => Bookings(),
+        'aboutus': (context) => Aboutus(),
+        'bottombar': (context) => NavigationExample(),
       },
     );
   }

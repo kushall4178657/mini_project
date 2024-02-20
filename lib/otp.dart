@@ -81,7 +81,7 @@ class _MyOtpState extends State<MyOtp> {
                     padding: const EdgeInsets.all(8.0),
                     child: Pinput(
                       androidSmsAutofillMethod:
-                          AndroidSmsAutofillMethod.smsUserConsentApi,
+                          AndroidSmsAutofillMethod.smsRetrieverApi,
                       length: 6,
                       defaultPinTheme: defaultPinTheme,
                       focusedPinTheme: focusedPinTheme,
@@ -108,8 +108,10 @@ class _MyOtpState extends State<MyOtp> {
                             await auth.signInWithCredential(credential);
                             if (await checkUserProfile()) {
                               print('user is registered');
+                              // Navigator.pushNamedAndRemoveUntil(
+                              //     context, 'home', (route) => false);
                               Navigator.pushNamedAndRemoveUntil(
-                                  context, 'home', (route) => false);
+                                  context, 'bottombar', (route) => false);
                             } else {
                               print('user is not registered');
                               Navigator.pushNamedAndRemoveUntil(

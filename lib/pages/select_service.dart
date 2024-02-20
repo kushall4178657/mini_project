@@ -132,17 +132,18 @@ class _SelectServiceState extends State<SelectService> {
           borderRadius: BorderRadius.circular(20.0),
         ),
         child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Image.network(image, height: 80),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                name,
-                style: TextStyle(fontSize: 20),
-              )
-            ]),
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.network(image, height: 80),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              name,
+              style: TextStyle(fontSize: 20),
+            )
+          ],
+        ),
       ),
     );
   }

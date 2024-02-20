@@ -151,7 +151,7 @@ class _DateAndTimeState extends State<DateAndTime> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HomePage(),
+                  builder: (context) => HomePageState(),
                 ),
               );
             },
@@ -439,7 +439,7 @@ class _DateAndTimeState extends State<DateAndTime> {
                                             height: 5,
                                           ),
                                           Text(
-                                            "+${_exteraCleaning[index][2]}\$",
+                                            "+${_exteraCleaning[index][2]}\Rs.",
                                             style:
                                                 TextStyle(color: Colors.black),
                                           )

@@ -33,14 +33,6 @@ class HomeAppBar extends StatelessWidget {
             //padding: EdgeInsets.only(right: 0),
             child: Row(
               children: [
-                //Padding(padding: EdgeInsets.only(right: 10)),
-                // IconButton(
-                //   onPressed: () {},
-                //   icon: Icon(
-                //     Icons.search_rounded,
-                //     color: Colors.pink,
-                //   ),
-                // ),
                 IconButton(
                   onPressed: () {
                     Navigator.pushNamed(context, 'logout');
