@@ -7,7 +7,7 @@ class Bookings extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
       body: Center(
-        child: Text('You\'re Bookings here'),
+        child: Text('No Bookings Made Yet!'),
       ),
     ));
   }

@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mini_pro/animation/FadeAnimation.dart';
-import 'package:mini_pro/bottomAppbar.dart';
-import 'package:mini_pro/logout.dart';
 import 'package:mini_pro/pages/cleaning.dart';
 import 'package:mini_pro/pages/select_service.dart';
 import 'package:mini_pro/widgets//service.dart';
+import 'package:mini_pro/electrician_page.dart';
+import 'package:mini_pro/logout.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../widgets/HomeAppBar.dart';
 
 class HomePageState extends StatefulWidget {
@@ -18,6 +17,14 @@ class HomePageState extends StatefulWidget {
 }
 
 class _HomePageStateState extends State<HomePageState> {
+  var auth = FirebaseAuth.instance;
+  var user = FirebaseAuth.instance.currentUser;
+
+  Future<void> signOut() async {
+    await auth.signOut();
+    Navigator.pushNamedAndRemoveUntil(context, 'phone', (route) => false);
+  }
+
   int currentPageIndex = 0;
   List imageList = [
     {
@@ -51,15 +58,53 @@ class _HomePageStateState extends State<HomePageState> {
       'https://images.unsplash.com/photo-1506803682981-6e718a9dd3ee?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=c3a31eeb7efb4d533647e3cad1de9257',
       4.8
     ],
+    [
+      'Alfredo Schafer',
+      'Plumber',
+      'https://images.unsplash.com/photo-1506803682981-6e718a9dd3ee?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=c3a31eeb7efb4d533647e3cad1de9257',
+      4.8
+    ],
+    [
+      'Alfredo Schafer',
+      'Plumber',
+      'https://images.unsplash.com/photo-1506803682981-6e718a9dd3ee?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=c3a31eeb7efb4d533647e3cad1de9257',
+      4.8
+    ],
   ];
 
   serviceContainer(String image, String name, int index) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CleaningPage()),
-        );
+        switch (index) {
+          case 0:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CleaningPage()),
+            );
+            break;
+          case 1:
+            // Navigate to Maid page
+            break;
+          case 2:
+            // Navigate to Plumber page
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ElectricianPage()),
+            );
+            break;
+          case 3:
+            // Navigate to Electrician page
+            break;
+          case 4:
+            // Navigate to Painter page
+            break;
+          case 5:
+            // Navigate to Carpenter page
+            break;
+          default:
+            // Handle default case or error
+            break;
+        }
       },
       child: Container(
         margin: EdgeInsets.only(left: 12, right: 12),
@@ -308,60 +353,6 @@ class _HomePageStateState extends State<HomePageState> {
             ),
           ),
         ),
-        // bottomNavigationBar: NavigationExample(),
-
-        // bottomNavigationBar: NavigationBar(
-        //   onDestinationSelected: (int index) {
-        //     setState(() {
-        //       currentPageIndex = index;
-        //     });
-        //   },
-        //   indicatorColor: Colors.amber,
-        //   selectedIndex: currentPageIndex,
-        //   destinations: const <Widget>[
-        //     NavigationDestination(
-        //       selectedIcon: Icon(Icons.home),
-        //       icon: Icon(Icons.home_outlined),
-        //       label: 'Home',
-        //     ),
-        //     NavigationDestination(
-        //       icon: Icon(Icons.library_books_outlined),
-        //       label: 'Bookings',
-        //     ),
-        //     NavigationDestination(
-        //       icon: Icon(Icons.account_circle),
-        //       label: 'Profile',
-        //     ),
-        //   ],
-        // ),
-        // bottomNavigationBar: BottomNavigationBar(
-        //   type: BottomNavigationBarType.fixed,
-        //   selectedItemColor: Colors.pink,
-        //   items: [
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.home),
-        //       label: 'Home',
-        //     ),
-        //     BottomNavigationBarItem(
-        //         icon: Icon(Icons.library_books_outlined), label: 'Orders'),
-        //     BottomNavigationBarItem(
-        //         icon: Icon(Icons.account_circle), label: 'Settings'),
-        //   ],
-        //   onTap: (currentIndex) {
-        //     if (currentIndex == 0) {
-        //       Navigator.pushNamed(context, 'home');
-        //     }
-        //     if (currentIndex == 1) {
-        //       // Navigator.pushNamed(context, 'home');
-        //       // PersistentNavBarNavigator.pushNewScreen(context,
-        //       //     screen: MyHome(), withNavBar: true);
-        //     }
-        //     if (currentIndex == 2) {
-        //       Navigator.pushNamed(context, 'logout');
-        //     }
-        //   },
-        // ),
-        // bottomNavigationBar: bottomAppBar(),
       ),
     );
   }

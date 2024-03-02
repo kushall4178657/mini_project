@@ -3,9 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyWidget extends StatelessWidget {
-  final User? user;
-
-  MyWidget({Key? key, this.user}) : super(key: key);
+  final User? user = FirebaseAuth.instance.currentUser;
+  var name = '';
+  var email = '';
+  MyWidget(User? currentUser);
 
   Future<Map<String, dynamic>> getUserData() async {
     try {
@@ -30,6 +31,8 @@ class MyWidget extends StatelessWidget {
           return Text('Error: ${snapshot.error}');
         } else {
           final userData = snapshot.data!;
+          name = userData['name'];
+          email = userData['email'];
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

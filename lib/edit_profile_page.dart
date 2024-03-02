@@ -1,27 +1,27 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mini_pro/phone.dart';
+import 'package:mini_pro/fetchdata.dart';
+import 'package:mini_pro/profile_screen.dart';
 
-class ProfileScreen extends StatefulWidget {
-  ProfileScreen({super.key});
-
+class EditProfilePage extends StatefulWidget {
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  final _formKey = GlobalKey<FormState>();
-
+class _EditProfilePageState extends State<EditProfilePage> {
   final nameController = TextEditingController();
 
   final emailController = TextEditingController();
 
   final mobileController = TextEditingController();
+
+  String profile_pic_url = '';
 
   User? user = FirebaseAuth.instance.currentUser;
 
@@ -52,30 +52,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return imageUrl;
   }
 
-  // storeUserInfo() async {
-  //   String url = await uploadImage(selectedImage!);
-  //   String uid = FirebaseAuth.instance.currentUser!.uid;
-  //   FirebaseFirestore.instance.collection('Users').doc(uid).set({
-  //     'image': url,
-  //     'name': nameController.text,
-  //     'email': emailController.text,
-  //     'mobile': MyPhone.phone_num,
-  //   }).then((value) {
-  //     nameController.clear();
-  //     emailController.clear();
-  //     Get.toNamed('home');
-  //   });
-  // }
+  // Method to fetch user data from Firestore
+  Future<void> fetchUserData() async {
+    try {
+      if (user != null) {
+        DocumentSnapshot<Map<String, dynamic>> snapshot =
+            await FirebaseFirestore.instance
+                .collection('Users')
+                .doc(user!.uid)
+                .get();
+
+        if (snapshot.exists) {
+          // Set initial values of form fields
+          setState(() {
+            nameController.text = snapshot.data()!['name'] ?? '';
+            emailController.text = snapshot.data()!['email'] ?? '';
+            mobileController.text = snapshot.data()!['mobile'] ?? '';
+            profile_pic_url = snapshot.data()!['image'] ?? '';
+          });
+        }
+      }
+    } catch (error) {
+      print('Error fetching user data: $error');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch user data when the widget is initialized
+    fetchUserData();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.pink,
           centerTitle: true,
           title: const Text(
-            'Set Profile',
-            style: TextStyle(color: Colors.black),
+            'Edit Profile',
+            style: TextStyle(color: Colors.white),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
           ),
         ),
         body: SingleChildScrollView(
@@ -87,14 +114,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: selectedImage == null
+                      child: selectedImage == null && profile_pic_url.isNotEmpty
                           ? Container(
                               decoration: BoxDecoration(color: Colors.grey),
                               width: 120,
                               height: 120,
-                              child: Icon(
-                                Icons.camera_alt_outlined,
-                                size: 50.0,
+                              child: Image(
+                                image: NetworkImage(profile_pic_url),
+                                fit: BoxFit.fill,
                               ),
                             )
                           : Container(
@@ -102,10 +129,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   border: Border.all(color: Colors.grey)),
                               width: 120,
                               height: 120,
-                              child: Image(
-                                image: FileImage(selectedImage!),
-                                fit: BoxFit.fill,
-                              ),
+                              child: selectedImage != null
+                                  ? Image(
+                                      image: FileImage(selectedImage!),
+                                      fit: BoxFit.fill,
+                                    )
+                                  : Icon(
+                                      Icons.camera_alt_outlined,
+                                      size: 50.0,
+                                    ),
                             ),
                     ),
                     Positioned(
@@ -136,19 +168,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 50,
                 ),
                 Form(
-                  key: _formKey,
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
                       children: [
                         TextFormField(
                           controller: nameController,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your name';
-                            }
-                            return null;
-                          },
                           cursorColor: Colors.pink,
                           decoration: InputDecoration(
                               focusColor: Colors.pink,
@@ -168,14 +193,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         TextFormField(
                           controller: emailController,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your email';
-                            } else if (!EmailValidator.validate(value)) {
-                              return 'Please enter a valid email';
-                            }
-                            return null;
-                          },
                           cursorColor: Colors.pink,
                           decoration: InputDecoration(
                               focusColor: Colors.pink,
@@ -192,19 +209,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 15,
                         ),
                         TextFormField(
+                          controller: mobileController,
                           enabled: false,
-                          initialValue: MyPhone.phone_num,
                           cursorColor: Colors.pink,
                           decoration: InputDecoration(
-                            focusColor: Colors.pink,
-                            disabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            prefixIcon: const Icon(Icons.phone_outlined),
-                            // label: Text('Phone Number'),
-                            // labelStyle: TextStyle(color: Colors.black),
-                          ),
+                              focusColor: Colors.pink,
+                              disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100)),
+                              prefixIcon:
+                                  const Icon(Icons.phone_android_rounded),
+                              label: const Text('Mobile'),
+                              labelStyle: const TextStyle(color: Colors.black)),
                           textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(
+                          height: 15,
                         ),
                         const SizedBox(
                           height: 15,
@@ -221,26 +242,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             onPressed: () async {
                               // storeUserInfo();
-                              if (_formKey.currentState!.validate()) {
-                                String url = await uploadImage(selectedImage!);
-                                DocumentReference<Map<String, dynamic>>
-                                    collreference = FirebaseFirestore.instance
-                                        .collection('Users')
-                                        .doc(user!.uid);
-                                collreference.set(
-                                  {
-                                    'image': url,
-                                    'name': nameController.text,
-                                    'email': emailController.text,
-                                    'mobile': MyPhone.phone_num,
-                                  },
-                                );
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context, 'home', ((route) => false));
-                              }
+                              String url = await uploadImage(selectedImage!);
+                              DocumentReference<Map<String, dynamic>>
+                                  collreference = FirebaseFirestore.instance
+                                      .collection('Users')
+                                      .doc(user!.uid);
+                              collreference.set(
+                                {
+                                  'image': url,
+                                  'name': nameController.text,
+                                  'email': emailController.text,
+                                  'mobile': mobileController.text,
+                                },
+                              );
                             },
                             child: const Text(
-                              'Save',
+                              'Update',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),

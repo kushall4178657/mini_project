@@ -5,6 +5,22 @@ class Aboutus extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "About Us",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.pink,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Center(

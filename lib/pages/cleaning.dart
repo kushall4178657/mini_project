@@ -449,11 +449,21 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:mini_pro/order_summary.dart';
 import 'package:mini_pro/pages/date_time.dart';
+
+class SelectedRoom {
+  final String name;
+  final double sqft;
+  final int count;
+
+  SelectedRoom(this.name, this.sqft, this.count);
+}
 
 class CleaningPage extends StatefulWidget {
   const CleaningPage({Key? key}) : super(key: key);
 
+  static List<SelectedRoom> final_rooms = [];
   @override
   _CleaningPageState createState() => _CleaningPageState();
 }
@@ -511,9 +521,27 @@ class _CleaningPageState extends State<CleaningPage> {
             ? FloatingActionButton(
                 onPressed: () {
                   // Navigate to next page
+                  List<SelectedRoom> selectedRooms = [];
+                  for (var room in _rooms) {
+                    if (room['selected']) {
+                      selectedRooms.add(
+                        SelectedRoom(
+                          room['name'],
+                          room['sqft'],
+                          room['count'],
+                        ),
+                      );
+                    }
+                  }
+                  CleaningPage.final_rooms = selectedRooms;
+                  // print(CleaningPage.final_rooms[0].name);
+                  // print(selectedRooms[0].name);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DateAndTime()),
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          DateAndTime(selectedRooms: selectedRooms),
+                    ),
                   );
                 },
                 child: Row(

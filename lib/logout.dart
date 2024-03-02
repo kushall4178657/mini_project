@@ -1,11 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mini_pro/aboutus.dart';
-import 'package:mini_pro/bookings.dart';
 import 'package:mini_pro/fetchdata.dart';
-import 'package:mini_pro/usermodel.dart';
 
 class Mylogout extends StatefulWidget {
   const Mylogout({super.key});
@@ -34,14 +29,16 @@ class _MylogoutState extends State<Mylogout> {
                 SizedBox(
                   height: 10,
                 ),
-                MyWidget(user: FirebaseAuth.instance.currentUser),
+                MyWidget(FirebaseAuth.instance.currentUser),
                 SizedBox(
                   height: 10,
                 ),
                 SizedBox(
                   width: 200,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, 'editprofile');
+                    },
                     child: Text(
                       'Edit Profile',
                       style: TextStyle(color: Colors.white),
@@ -75,6 +72,9 @@ class _MylogoutState extends State<Mylogout> {
                     ),
                     child: Icon(Icons.chevron_right_rounded),
                   ),
+                  onTap: () {
+                    Navigator.pushNamed(context, 'settings');
+                  },
                 ),
                 ListTile(
                   leading: Container(
@@ -105,9 +105,9 @@ class _MylogoutState extends State<Mylogout> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
                     ),
-                    child: Icon(Icons.credit_card_rounded),
+                    child: Icon(Icons.feedback_outlined),
                   ),
-                  title: Text('Manage Payment methods'),
+                  title: Text('Feedback'),
                   trailing: Container(
                     width: 30,
                     height: 30,

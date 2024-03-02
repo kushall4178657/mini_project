@@ -1,72 +1,37 @@
+import 'package:calendar_timeline/calendar_timeline.dart';
+import 'package:get/get.dart';
 import 'package:mini_pro/animation/FadeAnimation.dart';
-import 'package:mini_pro/pages/home.dart';
+import 'package:mini_pro/order_summary.dart';
+import 'package:mini_pro/pages/cleaning.dart';
+
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
+class SelectedDateTime {
+  final DateTime date;
+  final String time;
+  final List<String> extraServices;
+
+  SelectedDateTime(this.date, this.time, this.extraServices);
+}
+
 class DateAndTime extends StatefulWidget {
-  const DateAndTime({Key? key}) : super(key: key);
+  final List<SelectedRoom>? selectedRooms;
+  const DateAndTime({Key? key, required this.selectedRooms}) : super(key: key);
 
   @override
   _DateAndTimeState createState() => _DateAndTimeState();
 }
 
 class _DateAndTimeState extends State<DateAndTime> {
-  int _selectedDay = 2;
+  DateTime _selectedDate = DateTime.now();
   int _selectedRepeat = 0;
   String _selectedHour = '13:30';
   List<int> _selectedExteraCleaning = [];
 
   ItemScrollController _scrollController = ItemScrollController();
 
-  final List<dynamic> _days = [
-    [1, 'Fri'],
-    [2, 'Sat'],
-    [3, 'Sun'],
-    [4, 'Mon'],
-    [5, 'Tue'],
-    [6, 'Wed'],
-    [7, 'Thu'],
-    [8, 'Fri'],
-    [9, 'Sat'],
-    [10, 'Sun'],
-    [11, 'Mon'],
-    [12, 'Tue'],
-    [13, 'Wed'],
-    [14, 'Thu'],
-    [15, 'Fri'],
-    [16, 'Sat'],
-    [17, 'Sun'],
-    [18, 'Mon'],
-    [19, 'Tue'],
-    [20, 'Wed'],
-    [21, 'Thu'],
-    [22, 'Fri'],
-    [23, 'Sat'],
-    [24, 'Sun'],
-    [25, 'Mon'],
-    [26, 'Tue'],
-    [27, 'Wed'],
-    [28, 'Thu'],
-    [29, 'Fri'],
-    [30, 'Sat'],
-    [31, 'Sun']
-  ];
-
   final List<String> _hours = <String>[
-    '01:00',
-    '01:30',
-    '02:00',
-    '02:30',
-    '03:00',
-    '03:30',
-    '04:00',
-    '04:30',
-    '05:00',
-    '05:30',
-    '06:00',
-    '06:30',
-    '07:00',
-    '07:30',
     '08:00',
     '08:30',
     '09:00',
@@ -132,7 +97,7 @@ class _DateAndTimeState extends State<DateAndTime> {
   void initState() {
     Future.delayed(Duration(milliseconds: 500), () {
       _scrollController.scrollTo(
-        index: 24,
+        index: 10,
         duration: Duration(seconds: 3),
         curve: Curves.easeInOut,
       );
@@ -148,10 +113,21 @@ class _DateAndTimeState extends State<DateAndTime> {
           backgroundColor: Colors.white,
           floatingActionButton: FloatingActionButton(
             onPressed: () {
+              List<String> selectedExtraServices = _selectedExteraCleaning
+                  .map((index) => _exteraCleaning[index][0] as String)
+                  .toList();
+              SelectedDateTime selectedDateTime = SelectedDateTime(
+                _selectedDate,
+                _selectedHour,
+                selectedExtraServices,
+              );
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HomePageState(),
+                  builder: (context) => OrderSummary(
+                    selectedDateTime: selectedDateTime,
+                  ),
                 ),
               );
             },
@@ -184,81 +160,99 @@ class _DateAndTimeState extends State<DateAndTime> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FadeAnimation(
-                      1,
-                      Row(
-                        children: [
-                          Text(
-                            "October 2021",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Spacer(),
-                          IconButton(
-                            padding: EdgeInsets.all(0),
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.arrow_drop_down_circle_outlined,
-                              color: Colors.grey.shade700,
-                            ),
-                          )
-                        ],
-                      )),
                   Container(
-                    height: 80,
+                    height: 140,
+                    padding: EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white,
                       border:
                           Border.all(width: 1.5, color: Colors.grey.shade200),
                     ),
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _days.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return FadeAnimation(
-                              (1 + index) / 6,
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _selectedDay = _days[index][0];
-                                  });
-                                },
-                                child: AnimatedContainer(
-                                  duration: Duration(milliseconds: 300),
-                                  width: 62,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: _selectedDay == _days[index][0]
-                                        ? Colors.pink.shade100.withOpacity(0.5)
-                                        : Colors.pink.withOpacity(0),
-                                    border: Border.all(
-                                      color: _selectedDay == _days[index][0]
-                                          ? Colors.pink
-                                          : Colors.white.withOpacity(0),
-                                      width: 1.5,
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        _days[index][0].toString(),
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        _days[index][1],
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ));
-                        }),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        MediaQuery(
+                          data: MediaQuery.of(context).copyWith(
+                            textScaler: TextScaler.linear(1.0),
+                          ),
+                          child: CalendarTimeline(
+                            // showYears: true,
+                            initialDate: _selectedDate,
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime.now()
+                                .add(const Duration(days: 365 * 4)),
+                            onDateSelected: (date) =>
+                                setState(() => _selectedDate = date),
+                            //leftMargin: 20,
+                            monthColor: Color.fromARGB(255, 3, 187, 243),
+                            dayColor: Color.fromARGB(255, 3, 187, 243),
+                            dayNameColor: const Color(0xFF333A47),
+                            activeDayColor: Color.fromARGB(255, 205, 200, 200),
+                            shrink: false,
+                            activeBackgroundDayColor: Colors.pink.shade400,
+                            dotsColor: Color.fromARGB(255, 68, 44, 81),
+                            locale: 'en',
+                          ),
+                        ),
+                        // const SizedBox(height: 20),
+                        // Center(
+                        //   child: Text(
+                        //     'Selected date is $_selectedDate.',
+                        //     style: const TextStyle(
+                        //         color: Color.fromARGB(255, 32, 180, 165)),
+                        //   ),
+                        // )
+                      ],
+                    ),
+                    // child: ListView.builder(
+                    //     scrollDirection: Axis.horizontal,
+                    //     itemCount: _days.length,
+                    //     itemBuilder: (BuildContext context, int index) {
+                    //       return FadeAnimation(
+                    //           (1 + index) / 6,
+                    //           GestureDetector(
+                    //             onTap: () {
+                    //               setState(() {
+                    //                 _selectedDay = _days[index][0];
+                    //               });
+                    //             },
+                    //             child: AnimatedContainer(
+                    //               duration: Duration(milliseconds: 300),
+                    //               width: 62,
+                    //               decoration: BoxDecoration(
+                    //                 borderRadius: BorderRadius.circular(5),
+                    //                 color: _selectedDay == _days[index][0]
+                    //                     ? Colors.pink.shade100.withOpacity(0.5)
+                    //                     : Colors.pink.withOpacity(0),
+                    //                 border: Border.all(
+                    //                   color: _selectedDay == _days[index][0]
+                    //                       ? Colors.pink
+                    //                       : Colors.white.withOpacity(0),
+                    //                   width: 1.5,
+                    //                 ),
+                    //               ),
+                    //               child: Column(
+                    //                 mainAxisAlignment: MainAxisAlignment.center,
+                    //                 children: [
+                    //                   Text(
+                    //                     _days[index][0].toString(),
+                    //                     style: TextStyle(
+                    //                         fontSize: 20,
+                    //                         fontWeight: FontWeight.bold),
+                    //                   ),
+                    //                   SizedBox(
+                    //                     height: 10,
+                    //                   ),
+                    //                   Text(
+                    //                     _days[index][1],
+                    //                     style: TextStyle(fontSize: 16),
+                    //                   ),
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //           ));
+                    //     }),
                   ),
                   SizedBox(
                     height: 10,
