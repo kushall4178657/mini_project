@@ -16,8 +16,9 @@ class SelectedDateTime {
 }
 
 class DateAndTime extends StatefulWidget {
-  final List<SelectedRoom>? selectedRooms;
-  const DateAndTime({Key? key, required this.selectedRooms}) : super(key: key);
+  // final List<SelectedRoom>? selectedRooms;
+  //required this.selectedRooms
+  const DateAndTime({Key? key}) : super(key: key);
 
   @override
   _DateAndTimeState createState() => _DateAndTimeState();
@@ -130,6 +131,12 @@ class _DateAndTimeState extends State<DateAndTime> {
                   ),
                 ),
               );
+              // Get.to(
+              //   () => OrderSummary(selectedDateTime: selectedDateTime),
+              // );
+              // setState(() {
+              //   // Get.to(() => OrderSummary(selectedDateTime: selectedDateTime));
+              // });
             },
             child: Icon(Icons.arrow_forward_ios),
           ),

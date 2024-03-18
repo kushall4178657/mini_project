@@ -1,9 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:mini_pro/animation/FadeAnimation.dart';
+import 'package:mini_pro/carpenter_page.dart';
+import 'package:mini_pro/cook_page.dart';
+import 'package:mini_pro/electrician_page.dart';
 import 'package:mini_pro/pages/cleaning.dart';
 import 'package:mini_pro/pages/select_service.dart';
 import 'package:mini_pro/widgets//service.dart';
-import 'package:mini_pro/electrician_page.dart';
+import 'package:mini_pro/plumber_page.dart';
 import 'package:mini_pro/logout.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -40,7 +44,7 @@ class _HomePageStateState extends State<HomePageState> {
   List<Service> services = [
     Service('Cleaning',
         'https://img.icons8.com/external-vitaliy-gorbachev-flat-vitaly-gorbachev/2x/external-cleaning-labour-day-vitaliy-gorbachev-flat-vitaly-gorbachev.png'),
-    Service('Maid',
+    Service('Cook',
         'https://cdn4.iconfinder.com/data/icons/people-40/48/chef_female-512.png'),
     Service('Plumber',
         'https://img.icons8.com/external-vitaliy-gorbachev-flat-vitaly-gorbachev/2x/external-plumber-labour-day-vitaliy-gorbachev-flat-vitaly-gorbachev.png'),
@@ -59,16 +63,16 @@ class _HomePageStateState extends State<HomePageState> {
       4.8
     ],
     [
-      'Alfredo Schafer',
-      'Plumber',
+      'Tony Stark',
+      'Carpenter',
       'https://images.unsplash.com/photo-1506803682981-6e718a9dd3ee?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=c3a31eeb7efb4d533647e3cad1de9257',
-      4.8
+      4.9
     ],
     [
-      'Alfredo Schafer',
-      'Plumber',
+      'Steve Rogers',
+      'Electrician',
       'https://images.unsplash.com/photo-1506803682981-6e718a9dd3ee?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=c3a31eeb7efb4d533647e3cad1de9257',
-      4.8
+      4.5
     ],
   ];
 
@@ -77,29 +81,35 @@ class _HomePageStateState extends State<HomePageState> {
       onTap: () {
         switch (index) {
           case 0:
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CleaningPage()),
-            );
+            // Cleaning Page
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => CleaningPage()),
+            // );
+            Get.to(() => CleaningPage());
             break;
           case 1:
-            // Navigate to Maid page
+            // Cook page
+            Get.to(() => CookPage());
             break;
           case 2:
-            // Navigate to Plumber page
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ElectricianPage()),
-            );
+            //  Plumber page
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => PlumberPage()),
+            // );
+            Get.to(() => PlumberPage());
             break;
           case 3:
-            // Navigate to Electrician page
+            // Electrician page
+            Get.to(() => ElectricianPage());
             break;
           case 4:
-            // Navigate to Painter page
+            // Painter page
             break;
           case 5:
-            // Navigate to Carpenter page
+            // Carpenter page
+            Get.to(() => CarpenterPage());
             break;
           default:
             // Handle default case or error

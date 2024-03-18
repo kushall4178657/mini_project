@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mini_pro/feedback.dart';
 import 'package:mini_pro/fetchdata.dart';
+import 'package:get/get.dart';
 
 class Mylogout extends StatefulWidget {
   const Mylogout({super.key});
@@ -116,6 +118,9 @@ class _MylogoutState extends State<Mylogout> {
                     ),
                     child: Icon(Icons.chevron_right_rounded),
                   ),
+                  onTap: () {
+                    Get.to(() => FeedbackScreen());
+                  },
                 ),
                 ListTile(
                   leading: Container(

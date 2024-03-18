@@ -15,6 +15,7 @@ import 'package:mini_pro/profile_screen.dart';
 import 'package:get/get.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:mini_pro/settings_page.dart';
+import 'package:mini_pro/worker_profile.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -61,7 +62,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: ProfileScreen(),
+      // home: WorkerScreen(),
       home: isLogin ? const NavigationExample() : const MyPhone(),
       initialRoute: '/',
       routes: {
