@@ -4,6 +4,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mini_pro/phone.dart';
 
@@ -153,10 +154,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: InputDecoration(
                               focusColor: Colors.pink,
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(100),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(100),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               prefixIcon: const Icon(Icons.account_circle),
                               label: const Text('Full Name'),
@@ -180,9 +187,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: InputDecoration(
                               focusColor: Colors.pink,
                               enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100)),
+                                  borderRadius: BorderRadius.circular(10)),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                               focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100)),
+                                  borderRadius: BorderRadius.circular(10)),
                               prefixIcon: const Icon(Icons.email_outlined),
                               label: const Text('Email'),
                               labelStyle: const TextStyle(color: Colors.black)),
@@ -198,7 +211,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: InputDecoration(
                             focusColor: Colors.pink,
                             disabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(100),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             prefixIcon: const Icon(Icons.phone_outlined),
                             // label: Text('Phone Number'),
@@ -221,22 +234,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             onPressed: () async {
                               // storeUserInfo();
-                              if (_formKey.currentState!.validate()) {
-                                String url = await uploadImage(selectedImage!);
-                                DocumentReference<Map<String, dynamic>>
-                                    collreference = FirebaseFirestore.instance
-                                        .collection('Users')
-                                        .doc(user!.uid);
-                                collreference.set(
-                                  {
-                                    'image': url,
-                                    'name': nameController.text,
-                                    'email': emailController.text,
-                                    'mobile': MyPhone.phone_num,
-                                  },
+                              if (selectedImage == null) {
+                                Get.snackbar(
+                                  'Error',
+                                  'Please Select a profile Image',
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  padding: EdgeInsets.all(10),
+                                  margin: EdgeInsets.all(8),
                                 );
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context, 'home', ((route) => false));
+                              } else {
+                                if (_formKey.currentState!.validate()) {
+                                  String url =
+                                      await uploadImage(selectedImage!);
+                                  DocumentReference<Map<String, dynamic>>
+                                      collreference = FirebaseFirestore.instance
+                                          .collection('Users')
+                                          .doc(user!.uid);
+                                  collreference.set(
+                                    {
+                                      'image': url,
+                                      'name': nameController.text,
+                                      'email': emailController.text,
+                                      'mobile': MyPhone.phone_num,
+                                    },
+                                  );
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context, 'bottombar', ((route) => false));
+                                }
                               }
                             },
                             child: const Text(

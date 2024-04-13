@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:mini_pro/animation/FadeAnimation.dart';
-import 'package:mini_pro/pages/cleaning.dart';
 import 'package:mini_pro/pages/date_time.dart';
 import 'package:mini_pro/pages/select_service.dart';
 import 'package:mini_pro/widgets//service.dart';
@@ -8,55 +7,55 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../widgets/HomeAppBar.dart';
 
-class ElectricianPage extends StatefulWidget {
-  const ElectricianPage({Key? key}) : super(key: key);
-  static electrician_Service final_service = electrician_Service('', '', '', 0);
+class PainterPage extends StatefulWidget {
+  const PainterPage({Key? key}) : super(key: key);
+  static painterService finalService = painterService('', '', '', 0);
 
   static void resetFinalService() {
-    final_service = electrician_Service('', '', '', 0);
+    finalService = painterService('', '', '', 0);
   }
 
   @override
-  _ElectricianPageState createState() => _ElectricianPageState();
+  _PainterPageState createState() => _PainterPageState();
 }
 
-class _ElectricianPageState extends State<ElectricianPage> {
-  electrician_Service? selectedService;
+class _PainterPageState extends State<PainterPage> {
+  painterService? selectedService;
   List<dynamic> workers = [
     [
-      'Alfredo Schafer',
-      'Electrician',
+      'John Doe',
+      'Painter',
       'https://images.unsplash.com/photo-1506803682981-6e718a9dd3ee?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=c3a31eeb7efb4d533647e3cad1de9257',
       4.8
     ],
     [
-      'Tony Stark',
-      'Electrician',
+      'Jane Doe',
+      'Painter',
       'https://images.unsplash.com/photo-1506803682981-6e718a9dd3ee?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=c3a31eeb7efb4d533647e3cad1de9257',
       4.8
     ],
     [
-      'Steve Rogers',
-      'Electrician',
+      'Alice Smith',
+      'Painter',
       'https://images.unsplash.com/photo-1506803682981-6e718a9dd3ee?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=c3a31eeb7efb4d533647e3cad1de9257',
       4.8
     ],
   ];
 
-  List<electrician_Service> services = [
-    electrician_Service(
-        'Minor Repair/Installtion',
-        'assets/icons8-electrician-51.png',
-        'Book an expert electrician for on-site issue inspection,Actual prices based on scope of work and rate card',
+  List<painterService> services = [
+    painterService(
+        'Painting',
+        'assets/icons8-painter-64.png',
+        'Book an expert painter for interior or exterior painting,Actual prices based on scope of work and rate card',
         99),
-    electrician_Service(
-        'Book an Electrician',
+    painterService(
+        'Consultation',
         'assets/icons8-consultation-50.png',
         'Includes inspection charges,Actual prices based on scope of work and rate card',
         49),
   ];
 
-  void selectService(electrician_Service service) {
+  void selectService(painterService service) {
     setState(() {
       selectedService = service;
     });
@@ -77,7 +76,7 @@ class _ElectricianPageState extends State<ElectricianPage> {
             },
           ),
           title: Text(
-            'Electrician',
+            'Painter',
             style: TextStyle(
               color: Colors.white,
             ),
@@ -101,7 +100,7 @@ class _ElectricianPageState extends State<ElectricianPage> {
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () {
-                      ElectricianPage.final_service = services[index];
+                      PainterPage.finalService = services[index];
                       selectService(services[index]);
                       Get.to(() => DateAndTime());
                     },

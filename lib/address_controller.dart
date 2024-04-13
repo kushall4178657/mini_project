@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mini_pro/add_address.dart';
 import 'package:mini_pro/address_model.dart';
 import 'package:mini_pro/address_repositry.dart';
 
@@ -37,7 +38,9 @@ class AddressController extends GetxController {
       selectedAddress.value = addresses.firstWhere(
           (element) => element.selectedAddress ?? false,
           orElse: () => AddressModel.empty());
-      print(addresses);
+      // AddAddress.final_address = selectedAddress.value;
+
+      // print(addresses);
       return addresses;
     } catch (e) {
       print("Error fetching user addresses: $e");
@@ -72,12 +75,12 @@ class AddressController extends GetxController {
           state: stateValue,
           postalCode: postalcode.text,
           country: countryValue);
+
       final id = await addressRepository.addAddress(address);
       address.id = id;
       await selectedAddress(address);
       resetFormField();
       refreshData.toggle();
-      print('$name,$address,$phone');
       Navigator.of(Get.context!).pop();
     } catch (e) {
       throw 'Cannot Write';
@@ -89,6 +92,9 @@ class AddressController extends GetxController {
     phone.clear();
     street.clear();
     postalcode.clear();
+    countryValue = "";
+    stateValue = "";
+    cityValue = "";
     addressFormkey.currentState?.reset();
   }
 }

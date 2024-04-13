@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: WorkerScreen(),
+      // home: ProfileScreen(),
       home: isLogin ? const NavigationExample() : const MyPhone(),
       initialRoute: '/',
       routes: {
@@ -71,7 +71,7 @@ class _MyAppState extends State<MyApp> {
         'profile': (context) => ProfileScreen(),
         'home': (context) => HomePageState(),
         'logout': (context) => Mylogout(),
-        'bookings': (context) => Bookings(),
+        'bookings': (context) => BookingsPage(),
         'aboutus': (context) => Aboutus(),
         'bottombar': (context) => NavigationExample(),
         'settings': (context) => SettingsPage(),

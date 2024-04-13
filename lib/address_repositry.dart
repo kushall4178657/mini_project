@@ -29,6 +29,24 @@ class AddressRepository extends GetxController {
     }
   }
 
+  Future<List<AddressModel>> fetchUserOrders() async {
+    try {
+      final userId = FirebaseAuth.instance.currentUser!.uid;
+      if (userId.isEmpty)
+        throw 'Unable to find User information. Try again in few minutes.';
+
+      final result =
+          await _db.collection('Users').doc(userId).collection('Orders').get();
+      return result.docs
+          .map((documentSnapshot) =>
+              AddressModel.fromDocumentSnapshot(documentSnapshot))
+          .toList();
+    } catch (e) {
+      print('Error fetching user addresses: $e');
+      throw 'Something went wrong';
+    }
+  }
+
   Future<void> updateSelectedField(String addressId, bool selected) async {
     try {
       final userId = FirebaseAuth.instance.currentUser!.uid;

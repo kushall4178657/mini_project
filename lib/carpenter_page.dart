@@ -10,10 +10,10 @@ import '../widgets/HomeAppBar.dart';
 
 class CarpenterPage extends StatefulWidget {
   const CarpenterPage({Key? key}) : super(key: key);
-  static carpenter_Service final_service = carpenter_Service('', '', '', '');
+  static carpenter_Service final_service = carpenter_Service('', '', '', 0);
 
   static void resetFinalService() {
-    final_service = carpenter_Service('', '', '', '');
+    final_service = carpenter_Service('', '', '', 0);
   }
 
   @override
@@ -48,12 +48,12 @@ class _CarpenterPageState extends State<CarpenterPage> {
         'Minor Repair/Installtion',
         'assets/icons8-carpenter-50.png',
         'Book an expert carpenter for on-site issue inspection,Actual prices based on scope of work and rate card',
-        'Rs 99'),
+        99),
     carpenter_Service(
         'Book a Carpenter',
         'assets/icons8-consultation-50.png',
         'Includes inspection charges,Actual prices based on scope of work and rate card',
-        'Rs 49'),
+        49),
   ];
 
   void selectService(carpenter_Service service) {
@@ -95,6 +95,7 @@ class _CarpenterPageState extends State<CarpenterPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: services.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -172,6 +173,7 @@ class _CarpenterPageState extends State<CarpenterPage> {
                   children: [
                     ListView.builder(
                         //scrollDirection: Axis.vertical,
+                        physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: workers.length,
                         itemBuilder: (BuildContext context, int index) {
@@ -202,7 +204,7 @@ class _CarpenterPageState extends State<CarpenterPage> {
       child: AspectRatio(
         aspectRatio: 3.5,
         child: Container(
-          margin: EdgeInsets.only(top: 0),
+          margin: EdgeInsets.only(top: 5),
           padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
           decoration: BoxDecoration(
             color: Colors.white,

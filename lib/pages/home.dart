@@ -6,6 +6,7 @@ import 'package:mini_pro/cook_page.dart';
 import 'package:mini_pro/electrician_page.dart';
 import 'package:mini_pro/pages/cleaning.dart';
 import 'package:mini_pro/pages/select_service.dart';
+import 'package:mini_pro/painter_page.dart';
 import 'package:mini_pro/widgets//service.dart';
 import 'package:mini_pro/plumber_page.dart';
 import 'package:mini_pro/logout.dart';
@@ -106,6 +107,7 @@ class _HomePageStateState extends State<HomePageState> {
             break;
           case 4:
             // Painter page
+            Get.to(() => PainterPage());
             break;
           case 5:
             // Carpenter page
@@ -275,7 +277,8 @@ class _HomePageStateState extends State<HomePageState> {
                 FadeAnimation(
                     0,
                     Padding(
-                      padding: EdgeInsets.only(left: 20.0, right: 20),
+                      padding:
+                          EdgeInsets.only(left: 20.0, right: 20, top: 10.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -286,23 +289,23 @@ class _HomePageStateState extends State<HomePageState> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black),
                           ),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SelectService()),
-                                );
-                              },
-                              child: Text(
-                                'View all',
-                                style: TextStyle(color: Colors.black),
-                              ))
+                          // TextButton(
+                          //     onPressed: () {
+                          //       Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //             builder: (context) => SelectService()),
+                          //       );
+                          //     },
+                          //     child: Text(
+                          //       'View all',
+                          //       style: TextStyle(color: Colors.black),
+                          //     ))
                         ],
                       ),
                     )),
                 Container(
-                  //padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.only(top: 5),
                   height: 262,
                   child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -334,11 +337,11 @@ class _HomePageStateState extends State<HomePageState> {
                               fontWeight: FontWeight.bold,
                               color: Colors.black),
                         ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text('View all',
-                              style: TextStyle(color: Colors.black)),
-                        )
+                        // TextButton(
+                        //   onPressed: () {},
+                        //   child: Text('View all',
+                        //       style: TextStyle(color: Colors.black)),
+                        // )
                       ],
                     ),
                   ),

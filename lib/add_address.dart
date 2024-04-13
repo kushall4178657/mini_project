@@ -6,6 +6,11 @@ import 'package:mini_pro/address_controller.dart';
 import 'package:mini_pro/paymentmethod.dart';
 
 class AddAddress extends StatelessWidget {
+  static var final_address;
+  static var final_name;
+  static var phone_no;
+  static var selectedjson;
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(AddressController());
@@ -54,38 +59,54 @@ class AddAddress extends StatelessWidget {
                         return Text('Error: ${snapshot.error}');
                       }
                       final addresses = snapshot.data!;
+
                       return ListView.builder(
                         shrinkWrap: true,
                         itemCount: addresses.length,
                         itemBuilder: (context, index) => TSingleAddress(
-                          address: addresses[index],
-                          onTap: () => controller.selectedAddress(
-                            addresses[index],
-                          ),
-                        ),
+                            address: addresses[index],
+                            onTap: () {
+                              controller.selectedAddress(
+                                addresses[index],
+                              );
+                              Get.to(() => PaymentMethodsPage());
+                              selectedjson =
+                                  controller.selectedAddress.toJson();
+                              AddAddress.final_address =
+                                  controller.selectedAddress.value;
+                              AddAddress.final_name = selectedjson['Name'];
+                              AddAddress.phone_no = selectedjson['PhoneNumber'];
+                            }),
                       );
                     },
                   ),
                 ),
               ),
-              SizedBox(
-                width: 200,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.to(() => PaymentMethodsPage());
-                  },
-                  child: Text(
-                    "Proceed To Payment",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.pink,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
+              // SizedBox(
+              //   width: 200,
+              //   child: ElevatedButton(
+              //     onPressed: controller.selectedAddress == null
+              //         ? null
+              //         : () {
+              //             Get.to(() => PaymentMethodsPage());
+              //             selectedjson = controller.selectedAddress.toJson();
+              //             AddAddress.final_address =
+              //                 controller.selectedAddress.value;
+              //             AddAddress.final_name = selectedjson['Name'];
+              //             AddAddress.phone_no = selectedjson['PhoneNumber'];
+              //           },
+              //     child: Text(
+              //       "Proceed To Payment",
+              //       style: TextStyle(color: Colors.white),
+              //     ),
+              //     style: ElevatedButton.styleFrom(
+              //       backgroundColor: Colors.pink,
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(10),
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

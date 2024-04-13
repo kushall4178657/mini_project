@@ -70,7 +70,7 @@ class _NavigationExampleState extends State<NavigationExample> {
         ),
         body: <Widget>[
           HomePageState(),
-          Bookings(),
+          BookingsPage(),
           Mylogout(),
         ][currentPageIndex],
       ),

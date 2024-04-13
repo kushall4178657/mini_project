@@ -9,10 +9,10 @@ import '../widgets/HomeAppBar.dart';
 
 class PlumberPage extends StatefulWidget {
   const PlumberPage({Key? key}) : super(key: key);
-  static plumber_Service final_service = plumber_Service('', '', '', '');
+  static plumber_Service final_service = plumber_Service('', '', '', 0);
 
   static void resetFinalService() {
-    final_service = plumber_Service('', '', '', '');
+    final_service = plumber_Service('', '', '', 0);
     print("Value reset");
   }
 
@@ -48,12 +48,12 @@ class _PlumberPageState extends State<PlumberPage> {
         'Minor Repair/Installtion',
         'assets/icons8-plumber-50.png',
         'Book an expert plumber for on-site issue inspection.\nActual prices based on scope of work and rate card',
-        'Rs 99'),
+        99),
     plumber_Service(
         'Book a Plumber',
         'assets/icons8-consultation-50.png',
         'Includes inspection charges.\nActual prices based on scope of work and rate card',
-        'Rs 49'),
+        49),
   ];
 
   void selectService(plumber_Service service) {
@@ -95,6 +95,7 @@ class _PlumberPageState extends State<PlumberPage> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 ListView.builder(
+                  physics:NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: services.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -177,6 +178,7 @@ class _PlumberPageState extends State<PlumberPage> {
                     children: [
                       ListView.builder(
                           //scrollDirection: Axis.vertical,
+                          physics:NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: workers.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -199,101 +201,6 @@ class _PlumberPageState extends State<PlumberPage> {
           ),
         ),
       ),
-
-      // body: SingleChildScrollView(
-      //   child: Container(
-      //     padding: EdgeInsets.all(10.0),
-      //     child:
-      //         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      //       Text(
-      //         'Popular Services',
-      //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-      //       ),
-      //       ListView.builder(
-      //         shrinkWrap: true,
-      //         itemCount: services.length,
-      //         itemBuilder: (BuildContext context, int index) {
-      //           return Container(
-      //             padding: EdgeInsets.all(10),
-      //             margin: EdgeInsets.all(8),
-      //             decoration: BoxDecoration(
-      //               border: Border.all(color: Colors.grey),
-      //               borderRadius: BorderRadius.circular(10),
-      //             ),
-      //             child: Row(
-      //               children: [
-      //                 ClipRRect(
-      //                   borderRadius: BorderRadius.circular(15.0),
-      //                   child: Image.asset(
-      //                     services[index].image,
-      //                     width: 50,
-      //                     height: 50,
-      //                     fit: BoxFit.cover,
-      //                   ),
-      //                 ),
-      //                 SizedBox(width: 20),
-      //                 Expanded(
-      //                   child: Column(
-      //                     crossAxisAlignment: CrossAxisAlignment.start,
-      //                     children: [
-      //                       Text(
-      //                         services[index].name,
-      //                         style: TextStyle(
-      //                             fontSize: 16, fontWeight: FontWeight.bold),
-      //                       ),
-      //                       SizedBox(height: 5),
-      //                       Text(
-      //                         services[index].description,
-      //                         style: TextStyle(fontSize: 15),
-      //                       ),
-      //                       SizedBox(height: 5),
-      //                       Text(
-      //                         'Price: ${services[index].price}',
-      //                         style: TextStyle(
-      //                             fontSize: 15, fontWeight: FontWeight.bold),
-      //                       ),
-      //                     ],
-      //                   ),
-      //                 ),
-      //               ],
-      //             ),
-      //           );
-      //         },
-      //       ),
-      //       SizedBox(
-      //         height: 10,
-      //       ),
-      //       Text(
-      //         'Popular Workers',
-      //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-      //       ),
-      //       Container(
-      //         padding: EdgeInsets.all(10.0),
-      //         child: Column(
-      //           children: [
-      //             ListView.builder(
-      //                 //scrollDirection: Axis.vertical,
-      //                 shrinkWrap: true,
-      //                 itemCount: workers.length,
-      //                 itemBuilder: (BuildContext context, int index) {
-      //                   //SizedBox(height: 10,);
-      //                   return FadeAnimation(
-      //                     (1.0 + index) / 4,
-      //                     //SizedBox(height: 20,),
-      //                     workerContainer(
-      //                         workers[index][0],
-      //                         workers[index][1],
-      //                         workers[index][2],
-      //                         workers[index][3]),
-      //                   );
-      //                 }),
-      //           ],
-      //         ),
-      //       ),
-      //     ]),
-      //   ),
-      // ),
-      //SizedBox(height: 150,),
     );
   }
 
@@ -302,7 +209,7 @@ class _PlumberPageState extends State<PlumberPage> {
       child: AspectRatio(
         aspectRatio: 3.5,
         child: Container(
-          margin: EdgeInsets.only(top: 0),
+          margin: EdgeInsets.only(top: 5),
           padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
           decoration: BoxDecoration(
             color: Colors.white,

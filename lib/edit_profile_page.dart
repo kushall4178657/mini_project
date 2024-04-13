@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,8 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  final _formKey = GlobalKey<FormState>();
+
   final nameController = TextEditingController();
 
   final emailController = TextEditingController();
@@ -168,12 +171,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   height: 50,
                 ),
                 Form(
+                  key: _formKey,
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
                       children: [
                         TextFormField(
                           controller: nameController,
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.length < 5) {
+                              return 'Please enter your name';
+                            }
+                            return null;
+                          },
                           cursorColor: Colors.pink,
                           decoration: InputDecoration(
                               focusColor: Colors.pink,
@@ -193,6 +205,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         TextFormField(
                           controller: emailController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
+                            } else if (!EmailValidator.validate(value)) {
+                              return 'Please enter a valid email';
+                            }
+                            return null;
+                          },
                           cursorColor: Colors.pink,
                           decoration: InputDecoration(
                               focusColor: Colors.pink,
@@ -242,20 +262,52 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ),
                             onPressed: () async {
                               // storeUserInfo();
-                              String url = await uploadImage(selectedImage!);
-                              DocumentReference<Map<String, dynamic>>
-                                  collreference = FirebaseFirestore.instance
-                                      .collection('Users')
-                                      .doc(user!.uid);
-                              collreference.set(
-                                {
-                                  'image': url,
-                                  'name': nameController.text,
-                                  'email': emailController.text,
-                                  'mobile': mobileController.text,
-                                },
-                              );
+                              if (_formKey.currentState!.validate()) {
+                                String newName = nameController.text.trim();
+                                String newEmail = emailController.text.trim();
+                                // Check if the new values are different from the existing ones
+                                if (newName != user!.displayName ||
+                                    newEmail != user!.email ||
+                                    selectedImage != null) {
+                                  String imageUrl = '';
+                                  if (selectedImage != null) {
+                                    imageUrl =
+                                        await uploadImage(selectedImage!);
+                                  }
+
+                                  // Update only if there are changes
+                                  DocumentReference<Map<String, dynamic>>
+                                      collreference = FirebaseFirestore.instance
+                                          .collection('Users')
+                                          .doc(user!.uid);
+                                  collreference.update({
+                                    'image': imageUrl.isNotEmpty
+                                        ? imageUrl
+                                        : profile_pic_url,
+                                    'name': newName.isNotEmpty
+                                        ? newName
+                                        : user!.displayName,
+                                    'email': newEmail.isNotEmpty
+                                        ? newEmail
+                                        : user!.email,
+                                  });
+                                }
+                              }
                             },
+                            //   String url = await uploadImage(selectedImage!);
+                            //   DocumentReference<Map<String, dynamic>>
+                            //       collreference = FirebaseFirestore.instance
+                            //           .collection('Users')
+                            //           .doc(user!.uid);
+                            //   collreference.set(
+                            //     {
+                            //       'image': url,
+                            //       'name': nameController.text,
+                            //       'email': emailController.text,
+                            //       'mobile': mobileController.text,
+                            //     },
+                            //   );
+                            // },
                             child: const Text(
                               'Update',
                               style: TextStyle(color: Colors.white),

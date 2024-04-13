@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mini_pro/order_summary.dart';
@@ -7,17 +9,30 @@ class SelectedRoom {
   final String name;
   final double sqft;
   final int count;
+  final int price;
 
-  SelectedRoom(this.name, this.sqft, this.count);
+  SelectedRoom(this.name, this.sqft, this.count, this.price);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'sqft': sqft,
+      'count': count,
+    };
+  }
 }
 
 class CleaningPage extends StatefulWidget {
   const CleaningPage({Key? key}) : super(key: key);
 
   static List<SelectedRoom> final_rooms = [];
+  static String json = '';
+  static int price = 0;
 
   static void resetFinalService() {
     OrderSummary.selectedRooms = [];
+    CleaningPage.json = '';
+    CleaningPage.price = 0;
   }
 
   @override
@@ -33,6 +48,7 @@ class _CleaningPageState extends State<CleaningPage> {
       'selected': false,
       'sqft': 100.0,
       'count': 1,
+      'price': 50,
     },
     {
       'name': 'Bedroom',
@@ -41,6 +57,7 @@ class _CleaningPageState extends State<CleaningPage> {
       'selected': false,
       'sqft': 100.0,
       'count': 1,
+      'price': 50,
     },
     {
       'name': 'Bathroom',
@@ -49,6 +66,7 @@ class _CleaningPageState extends State<CleaningPage> {
       'selected': false,
       'sqft': 100.0,
       'count': 1,
+      'price': 50,
     },
     {
       'name': 'Kitchen',
@@ -57,6 +75,7 @@ class _CleaningPageState extends State<CleaningPage> {
       'selected': false,
       'sqft': 100.0,
       'count': 1,
+      'price': 50,
     },
     {
       'name': 'Office',
@@ -65,6 +84,7 @@ class _CleaningPageState extends State<CleaningPage> {
       'selected': false,
       'sqft': 100.0,
       'count': 1,
+      'price': 50,
     },
   ];
 
@@ -81,15 +101,16 @@ class _CleaningPageState extends State<CleaningPage> {
                   for (var room in _rooms) {
                     if (room['selected']) {
                       selectedRooms.add(
-                        SelectedRoom(
-                          room['name'],
-                          room['sqft'],
-                          room['count'],
-                        ),
+                        SelectedRoom(room['name'], room['sqft'], room['count'],
+                            room['price']),
                       );
                     }
                   }
                   OrderSummary.selectedRooms = selectedRooms;
+                  CleaningPage.price = selectedRooms.length * 50;
+                  CleaningPage.json = jsonEncode(
+                      selectedRooms.map((room) => room.toJson()).toList());
+
                   // print(CleaningPage.final_rooms[0].name);
                   // print(selectedRooms[0].name);
                   // Navigator.push(
@@ -222,7 +243,9 @@ class _CleaningPageState extends State<CleaningPage> {
                             icon: Icon(Icons.add),
                             onPressed: () {
                               setState(() {
-                                _rooms[index]['count']++;
+                                if (_rooms[index]['count'] < 5) {
+                                  _rooms[index]['count']++;
+                                }
                               });
                             },
                           ),
@@ -251,7 +274,7 @@ class _CleaningPageState extends State<CleaningPage> {
                         value: room['sqft'],
                         onChanged: (value) {
                           setState(() {
-                            _rooms[index]['sqft'] = value;
+                            _rooms[index]['sqft'] = value.roundToDouble();
                           });
                         },
                         max: 5000,

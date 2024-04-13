@@ -1,9 +1,37 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mini_pro/order_summary.dart';
 import 'package:mini_pro/pages/date_time.dart';
+
+class SelectedService {
+  final String name;
+  final double personCount;
+  final int price;
+  final double max;
+
+  SelectedService(this.name, this.personCount, this.price, this.max);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'personCount': personCount.round(),
+    };
+  }
+}
 
 class CookPage extends StatefulWidget {
   @override
   State<CookPage> createState() => _CookPageState();
+  static String serviceJson = '';
+  static int price = 0;
+
+  static void resetFinalService() {
+    OrderSummary.selectedServices = [];
+    CookPage.serviceJson = '';
+    CookPage.price = 0;
+  }
 }
 
 class _CookPageState extends State<CookPage> {
@@ -16,6 +44,7 @@ class _CookPageState extends State<CookPage> {
       'person_count': 1.0,
       'min': 1.0,
       'max': 5.0,
+      'price': 50,
     },
     {
       'name': 'Small event',
@@ -25,6 +54,7 @@ class _CookPageState extends State<CookPage> {
       'person_count': 10.0,
       'min': 6.0,
       'max': 30.0,
+      'price': 50,
     },
     {
       'name': 'Medium Event',
@@ -34,6 +64,7 @@ class _CookPageState extends State<CookPage> {
       'person_count': 50.0,
       'min': 31.0,
       'max': 80.0,
+      'price': 50,
     },
     {
       'name': 'Large event',
@@ -43,6 +74,7 @@ class _CookPageState extends State<CookPage> {
       'person_count': 100.0,
       'min': 81.0,
       'max': 150.0,
+      'price': 50,
     },
   ];
   @override
@@ -50,16 +82,30 @@ class _CookPageState extends State<CookPage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        floatingActionButton: _services.any((room) => room['selected'])
+        floatingActionButton: _services.any((name) => name['selected'])
             ? FloatingActionButton(
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) =>
-                  //         // DateAndTime(),
-                  //   ),
-                  // );
+                  List<SelectedService> selectedServices = [];
+                  for (var service in _services) {
+                    if (service['selected']) {
+                      selectedServices.add(
+                        SelectedService(
+                          service['name'],
+                          service['person_count'],
+                          service['price'],
+                          service['max'],
+                        ),
+                      );
+                    }
+                  }
+                  OrderSummary.selectedServices = selectedServices;
+                  CookPage.price = selectedServices.length * 50;
+                  // Convert selected services to JSON format
+                  CookPage.serviceJson = jsonEncode(selectedServices
+                      .map((service) => service.toJson())
+                      .toList());
+
+                  Get.to(() => DateAndTime());
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

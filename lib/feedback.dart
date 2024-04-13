@@ -90,6 +90,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your name';
+                            } else if (value.length < 10) {
+                              return 'Full Name is too short!';
                             }
                             return null;
                           },
@@ -113,6 +115,14 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         TextFormField(
                           keyboardType: TextInputType.number,
                           controller: mobileController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your phone number';
+                            } else if (value.length < 10) {
+                              return 'Mobile number must be at least 10 digits';
+                            }
+                            return null;
+                          },
                           cursorColor: Colors.pink,
                           decoration: InputDecoration(
                             focusColor: Colors.pink,
@@ -133,6 +143,14 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         ),
                         TextFormField(
                           controller: feedbackcontroller,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your feedback';
+                            } else if (value.length < 10) {
+                              return 'Feedback too short';
+                            }
+                            return null;
+                          },
                           maxLines: 4,
                           cursorColor: Colors.pink,
                           decoration: InputDecoration(

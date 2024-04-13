@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:csc_picker/csc_picker.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:mini_pro/address_repositry.dart';
 import 'package:mini_pro/address_controller.dart';
 
@@ -53,6 +54,14 @@ class _AddNewAddressState extends State<AddNewAddress> {
                 children: [
                   TextFormField(
                     controller: controller.name,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your full name (min 5 characters).';
+                      } else if (value.length < 5) {
+                        return 'Full Name is too short!';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       focusColor: Colors.pink,
                       enabledBorder: OutlineInputBorder(
@@ -62,7 +71,7 @@ class _AddNewAddressState extends State<AddNewAddress> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       prefixIcon: const Icon(Icons.account_circle),
-                      label: const Text('Full Name'),
+                      label: const Text('Full Name (5 characters minimum)'),
                       labelStyle: const TextStyle(color: Colors.black),
                     ),
                   ),
@@ -71,6 +80,17 @@ class _AddNewAddressState extends State<AddNewAddress> {
                   ),
                   TextFormField(
                     controller: controller.phone,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your phone number';
+                      } else if (value.length < 10) {
+                        return 'Mobile number must be at least 10 digits';
+                      }
+                      if (value.length > 10) {
+                        return 'Mobile number should not exceed 10 digits';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       focusColor: Colors.pink,
                       enabledBorder: OutlineInputBorder(
@@ -92,6 +112,14 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       Expanded(
                         child: TextFormField(
                           controller: controller.street,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Street Address cannot be empty!';
+                            } else if (value.length < 10) {
+                              return 'Street Address too short!';
+                            }
+                            return null;
+                          },
                           decoration: InputDecoration(
                             focusColor: Colors.pink,
                             enabledBorder: OutlineInputBorder(
@@ -112,6 +140,14 @@ class _AddNewAddressState extends State<AddNewAddress> {
                       Expanded(
                         child: TextFormField(
                           controller: controller.postalcode,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Pin Code can\'t be empty!';
+                            } else if (value.length < 5) {
+                              return 'Pincode too short';
+                            }
+                            return null;
+                          },
                           decoration: InputDecoration(
                             focusColor: Colors.pink,
                             enabledBorder: OutlineInputBorder(
@@ -194,8 +230,11 @@ class _AddNewAddressState extends State<AddNewAddress> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        controller.addNewAddress();
-                        print(controller.address);
+                        if (controller.addressFormkey.currentState!
+                            .validate()) {
+                          // All fields are valid, proceed with saving the address
+                          controller.addNewAddress();
+                        }
                       },
                       child: Text(
                         'Save Address',
