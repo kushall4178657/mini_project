@@ -1,11 +1,10 @@
-# mini_pro
+# HouseFix
 
 A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-HouseFix aims to provide better wage perday or permonth to unorganised worker section of society.
+HouseFix aims to provide better wage per day or permonth to unorganised worker section of society.
 
 # miniproject
 # Housefix
